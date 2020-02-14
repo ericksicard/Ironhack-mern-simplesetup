@@ -2,10 +2,13 @@ import path from 'path'
 import express from 'express'
 import { MongoClient } from 'mongodb'
 import template from './../template'
+import config from './../config/config'
+import app from './express'
 //comment out before building for production
 import devBundle from './devBundle'
 
-const app = express()
+//const app = express()  --> created at express.js
+
 //comment out before building for production
 devBundle.compile(app)
 
@@ -16,13 +19,12 @@ app.get('/', (req, res) => {
   res.status(200).send(template())
 })
 
-let port = process.env.PORT || 3000
-app.listen(port, function onStart(err) {
+app.listen(config.port, (err) => {
   if (err) {
-    console.log(err)
+  console.log(err)
   }
-  console.info('Server started on port %s.', port)
-})
+  console.info('Server started on port %s.', config.port)
+  })
 
 // Database Connection URL
 const url = process.env.MONGODB_URI || 'mongodb://localhost:27017/mernSimpleSetup'
