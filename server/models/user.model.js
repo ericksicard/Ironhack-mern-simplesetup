@@ -27,7 +27,7 @@ const userSchema = new mongoose.Schema(
     }
 )
 
-/******* change to bcryptjs if possible ************/
+/******* change to bcryptjs if possible & handle it in an autorization route************/
 // Pasword for auth as a virtual field
 userSchema
     .virtual('password')
@@ -40,6 +40,7 @@ userSchema
         return this._password;
     })
 
+/******* change to Passport for authentication & handle it in an autorization route ************/
 // Encryption and authentication
 userSchema.methods = {
     authenticate: function(plainText) {
@@ -60,3 +61,19 @@ userSchema.methods = {
         return Math.round((new Date().valueOf() * Math.random())) + ''
     }
 }
+
+/************** Include it in an autorization route **************/
+// Password field validation
+UserSchema
+    .path('hashed_password')
+    .validate(function(v) {
+        if (this._password && this._password.length < 6) {
+            this.invalidate('password', 'Password must be at least 6 characters.')
+        }
+        if (this.isNew && !this._password) {
+            this.invalidate('password', 'Password is required')
+        }
+    }, null)
+
+
+export default mongoose.model('User', UserSchema)
