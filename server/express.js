@@ -4,15 +4,27 @@ import cookieParser from 'cookie-parser'
 import compress from 'compression'
 import cors from 'cors'
 import helmet from 'helmet'
+import path from 'path'
 
 import Template from './../template'
 import userRoutes from './routes/user.routes'
 import authRoutes from './routes/auth.routes'
+import devBundle from './devBundle' // Loading Webpack middleware for development
 
 // express app
 const app = express()
+devBundle.compile(app)  // Loading Webpack middleware for development
 
-// middleware
+
+// Serving static files with Express
+/* Express server handling the requests to static files such as CSS files, images,
+or the bundled client-side JS from the dist folder
+*/
+const CURRENT_WORKING_DIR = process.cwd()
+app.use('/dist', express.static(path.join(CURRENT_WORKING_DIR, 'dist')))
+
+
+// Middlewares
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cookieParser())
