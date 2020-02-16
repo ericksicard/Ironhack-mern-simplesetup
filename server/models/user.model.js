@@ -1,48 +1,47 @@
 import mongoose from 'mongoose'
+import crypto from 'crypto'
 
-const userSchema = new mongoose.Schema(
-    {
-        name: {
-            type: String,
-            trim: true,
-            required: 'Name is required'
-        },
-        email: {
-            type: String,
-            trim: true,
-            unique: 'Email already exists',
-            match: [/.+\@.+\..+/, 'Please fill a valid email address'],
-            required: 'Email is required'
-        },
-        created: {
-            type: Date,
-            default: Date.now
-        },
-        updated: Date,
-        hashed_password: {
-            type: String,
-            required: "Password is required"
-        },
-        salt: String
+const UserSchema = new mongoose.Schema({
+    name: {
+      type: String,
+      trim: true,
+      required: 'Name is required'
+    },
+    email: {
+      type: String,
+      trim: true,
+      unique: 'Email already exists',
+      match: [/.+\@.+\..+/, 'Please fill a valid email address'],
+      required: 'Email is required'
+    },
+    hashed_password: {
+      type: String,
+      required: "Password is required"
+    },
+    salt: String,
+    updated: Date,
+    created: {
+      type: Date,
+      default: Date.now
     }
-)
+  })
 
 /******* change to bcryptjs if possible & handle it in an autorization route************/
 // Pasword for auth as a virtual field
-userSchema
-    .virtual('password')
-    .set(function(password) {
-        this._password = password;
-        this.salt = this.makeSalt();
-        this.hashed_password = this.encryptPassword(password)
-    })
-    .get(function() {
-        return this._password;
-    })
+UserSchema
+  .virtual('password')
+  .set(function(password) {
+    this._password = password
+    this.salt = this.makeSalt()
+    this.hashed_password = this.encryptPassword(password)
+  })
+  .get(function() {
+    return this._password
+  })
 
 /******* change to Passport for authentication & handle it in an autorization route ************/
 // Encryption and authentication
-userSchema.methods = {
+UserSchema.methods = {
     authenticate: function(plainText) {
         return this.encryptPassword(plainText) === this.hashed_password;
     },

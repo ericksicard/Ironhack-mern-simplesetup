@@ -1,6 +1,6 @@
 import User from '../models/user.model'
 import _ from 'lodash'
-import errorHandler from './error.controller'
+import errorHandler from './../helpers/dbErrorHandler'
 
 // CONTROLLER METHODS
 
@@ -94,9 +94,6 @@ const remove = (req, res, next) => {
         res.json( deletedUser )
     })
 }
-
-
-
 
 
 export default { create, userByID, read, list, remove, update }
