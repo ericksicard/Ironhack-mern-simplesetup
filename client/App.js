@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import MainRouter from './MainRouter'               // this component houses all the custom views developed for the application
 import {BrowserRouter} from 'react-router-dom'      // enable frontend routing with React Router
 import { hot } from 'react-hot-loader'              // enable live reloading of the React components during development
