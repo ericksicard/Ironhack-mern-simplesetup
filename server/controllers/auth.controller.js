@@ -1,6 +1,6 @@
 import User from '../models/user.model'
 import jwt from 'jsonwebtoken'
-//import expressJwt from 'express-jwt'
+import expressJwt from 'express-jwt'
 import config from './../../config/config'
 
 
@@ -45,10 +45,12 @@ const signin = (req, res) => {
         })
 }
 
+
 // Sign-out
 /* This function clears the response cookie containing the signed JWT. This is an optional
 endpoint and not really necessary for auth purposes if cookies are not used at all in the
-frontend */
+frontend 
+*/
 const signout = (req, res) => {
     res.clearCookie('t')
     return res.status('200').json({
@@ -57,8 +59,36 @@ const signout = (req, res) => {
 }
 
 
+// Requiring sign-in
+/* This method uses express-js to verify that the incoming request has a valid JWT in the
+Authorization header. If the token is valid, it appends the verified user's ID in an 'auth'
+key to the request object, otherwise it throws an authentication error.
+*/
+const requireSignin = expressJwt({
+    secret: config.jwtSecret,
+    userProperty: 'auth'
+})
 
 
+// Authorizing signed in users
+/* For some of the protected routes such as Update and Delete, on top of checking for
+authentication we also want to make sure the requesting user is only updating or deleting
+their own user information.
+   The hasAuthorization function checks if the authenticated user is the same as the user
+being updated or deleted before the corresponding CRUD controller function is allowed to
+proceed.
+   - req.auth object is populated by express-jwt in requireSignin after authentication verification
+   - req.profile is populated by the userByID function in the user.controller.js
+*/
+const hasAuthorization = (req, res, next) => {
+    const authorized = req.profile && req.auth && req.profile._id == req.auth._id;
+    if (!authorized) 
+    return res.status('403').json({
+        error: "User is not authorized"
+    })
 
-export default { signin, signout }
-//export default { signin, signout, requireSignin, hasAuthorization }
+    next();
+}
+
+
+export default { signin, signout, requireSignin, hasAuthorization }

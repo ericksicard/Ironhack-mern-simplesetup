@@ -21,6 +21,17 @@ app.use(helmet())
 app.use(cors())
 app.use('/', userRoutes)
 app.use('/', authRoutes)
+//Auth error handling for express-jwt
+/* express-jwt throws an error named UnauthorizedError when the token cannot be validated
+for some reason. We catch this error here to return a 401 status back to the requesting client.
+*/
+app.use( (err, req, res, next) => {
+    if (err.name === 'UnauthorizedError')
+    res.status(401).json({
+        "error": err.name + ": " + err.message
+    })
+})
+
 
 app.get('/', (req, res) => {
     res.status(200).send(Template())
