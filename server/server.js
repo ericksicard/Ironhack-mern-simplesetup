@@ -11,10 +11,10 @@ import devBundle from './devBundle'
 //const app = express()  --> now created at express.js
 
 //comment out before building for production
-devBundle.compile(app)
+//devBundle.compile(app)
 
-const CURRENT_WORKING_DIR = process.cwd()
-app.use('/dist', express.static(path.join(CURRENT_WORKING_DIR, 'dist')))
+//const CURRENT_WORKING_DIR = process.cwd()
+//app.use('/dist', express.static(path.join(CURRENT_WORKING_DIR, 'dist')))
 
 app.get('/', (req, res) => {
   res.status(200).send(template())

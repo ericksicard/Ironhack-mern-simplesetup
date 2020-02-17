@@ -5,6 +5,7 @@ import authCtrl from '../controllers/auth.controller'
 const router = express.Router()
 
 // ASSIGNING THE CORRESPONDING CONTROLLER FUNCTION
+// erick commets
 
 router.route('/api/users')
     .get(userCtrl.list)                                                         // Listing users with GET
