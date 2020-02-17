@@ -5,6 +5,7 @@ import {withStyles} from 'material-ui/styles'
 import Card, {CardContent, CardMedia} from 'material-ui/Card'
 import Typography from 'material-ui/Typography'
 import seashellImg from './../assets/images/seashell.jpg'
+import {Link} from 'react-router-dom'
 
 // Style declarations
 const styles = theme => ({
