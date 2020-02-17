@@ -25,6 +25,7 @@ const config = {
                     'babel-loader'
                 ]
             },
+            // Bundling image assets
             {
                 test: /\.(ttf|eot|svg|gif|jpg|png)(\?[\s\S]+)?$/,
                 use: 'file-loader'
